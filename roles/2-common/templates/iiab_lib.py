@@ -10,6 +10,7 @@ import xml.etree.ElementTree as ET
 import iiab.iiab_const as CONST
 
 lang_codes = {}
+lang_iso2_codes = {}
 
 def get_zim_list(path):
     '''
@@ -131,13 +132,19 @@ def add_libr_xml(kiwix_library_xml, zim_path, zimname, zimidx):
         pass
 
 def read_lang_codes():
-    '''Populate the global lang_codes dictionary from CONST.lang_codes_path json file'''
+    '''Populate the global lang_codes dictionary and iso2 list from CONST.lang_codes_path json file'''
 
     global lang_codes
+    global lang_iso2_codes
+
     with open(CONST.lang_codes_path, "r") as f:
         reads = f.read()
         #print("menu.json:%s"%reads)
         lang_codes = json.loads(reads)
+
+    # create iso2 index
+    for lang in lang_codes:
+        lang_iso2_codes[lang_codes[lang]['iso2']  ] = lang
 
 # there is a different algorithm in get_zim_list above
 
