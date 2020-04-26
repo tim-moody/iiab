@@ -178,6 +178,52 @@ def human_readable(num):
             return "%.0f%s"%(num, units[i])
         num /= 1024.0
 
+def read_json(file_path):
+    try:
+        with open(file_path, 'r') as json_file:
+            readstr = json_file.read()
+            json_dict = json.loads(readstr)
+        return json_dict
+    except OSError as e:
+        raise
+
+def write_json_file(src_dict, target_file, sort_keys=False):
+    try:
+        with open(target_file, 'w', encoding='utf8') as json_file:
+            json.dump(src_dict, json_file, ensure_ascii=False, indent=2, sort_keys=sort_keys)
+            json_file.write("\n")  # Add newline cause Py JSON does not
+    except OSError as e:
+        raise
+
+def read_yaml(file_name, loader=yaml.SafeLoader):
+    try:
+        with open(file_name, 'r') as f:
+            y = yaml.load(f, Loader=loader)
+            return y
+    except:
+        raise
+
+def subproc_run(cmdstr, shell=False, check=False):
+    args = shlex.split(cmdstr)
+    try:
+        compl_proc = subprocess.run(args, shell=shell, check=check,
+                                    universal_newlines=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except:
+        raise
+    return compl_proc
+
+def subproc_cmd(cmdstr, shell=False):
+    args = shlex.split(cmdstr)
+    outp = subproc_check_output(args, shell=shell)
+    return (outp)
+
+def subproc_check_output(args, shell=False):
+    try:
+        outp = subprocess.check_output(args, shell=shell, universal_newlines=True, encoding='utf8')
+    except:
+        raise
+    return outp
+
 # Environment Functions
 
 def get_iiab_env(name):
